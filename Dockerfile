@@ -3,9 +3,20 @@ FROM python:3.14-slim as builder
 
 WORKDIR /app
 
+# Install build dependencies required for compilation
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    gcc \
+    g++ \
+    make \
+    cargo \
+    rustc \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --user --no-cache-dir -r requirements.txt
 
 # Runtime stage
 FROM python:3.14-slim
