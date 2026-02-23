@@ -1,0 +1,57 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Virtual environments
+.venv
+venv
+env
+ENV
+__pycache__
+*.egg-info
+dist
+build
+
+# IDE and editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs and cache
+*.log
+logs/
+.pytest_cache/
+.coverage
+htmlcov/
+node_modules
+npm-debug.log
+
+# OS
+Thumbs.db
+
+# Tests
+test*.py
+scripts/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Railway and deployment
+railway.json
+Procfile
