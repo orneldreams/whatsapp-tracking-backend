@@ -1,8 +1,15 @@
-#!/bin/bash
-# Entrypoint script for Railway deployment
+#!/usr/bin/env python3
+import os
+import subprocess
+import sys
 
-# Set default port if not provided
-PORT=${PORT:-8000}
+# Get port from environment or default to 8000
+port = os.environ.get('PORT', '8000')
 
-# Run uvicorn with the port from environment
-exec uvicorn app.main:app --host 0.0.0.0 --port $PORT
+# Run uvicorn
+subprocess.call([
+    'uvicorn',
+    'app.main:app',
+    '--host', '0.0.0.0',
+    '--port', port
+])

@@ -27,10 +27,8 @@ ENV PYTHONUNBUFFERED=1 \
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy application code and entrypoint
+# Copy application code
 COPY . .
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
 # Create non-root user for security
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
@@ -39,5 +37,5 @@ USER appuser
 # Expose port
 EXPOSE 8000
 
-# Run application using entrypoint script
-ENTRYPOINT ["/entrypoint.sh"]
+# Run application - use shell form to expand $PORT
+CMD sh -c 'uvicorn app.main:app --host 0.0.0.0 --port $PORT'
