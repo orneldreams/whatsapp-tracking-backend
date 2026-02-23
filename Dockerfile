@@ -3,15 +3,15 @@ FROM python:3.11-slim as builder
 
 WORKDIR /app
 
-# Install build dependencies required for compilation
+# Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip and install dependencies
+# Copy requirements and install dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip setuptools wheel && \
-    pip install --user --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
 # Runtime stage
 FROM python:3.11-slim
@@ -19,12 +19,12 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Set environment variables
-ENV PATH=/root/.local/bin:$PATH \
-    PYTHONUNBUFFERED=1 \
+ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
-# Copy Python dependencies from builder
-COPY --from=builder /root/.local /root/.local
+# Copy Python packages from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy application code
 COPY . .
