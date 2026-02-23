@@ -3,11 +3,6 @@ FROM python:3.14-slim as builder
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
@@ -17,16 +12,12 @@ FROM python:3.14-slim
 
 WORKDIR /app
 
-# Install runtime dependencies only
-RUN apt-get update && apt-get install -y \
-    libpq5 \
-    && rm -rf /var/lib/apt/lists/*
+# Set PATH to use installed packages
+ENV PATH=/root/.local/bin:$PATH \
+    PYTHONUNBUFFERED=1
 
 # Copy Python dependencies from builder
 COPY --from=builder /root/.local /root/.local
-
-# Set PATH to use installed packages
-ENV PATH=/root/.local/bin:$PATH
 
 # Copy application code
 COPY . .
